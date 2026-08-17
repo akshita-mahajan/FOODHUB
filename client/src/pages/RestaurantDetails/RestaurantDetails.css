@@ -1,0 +1,126 @@
+.restaurant-details {
+  background: #fffaf3;
+  min-height: 100vh;
+}
+
+.details-hero {
+  height: 520px;
+  position: relative;
+  overflow: hidden;
+}
+
+.details-hero img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.details-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.72), rgba(0,0,0,0.15));
+}
+
+.details-overlay {
+  position: absolute;
+  left: 7%;
+  bottom: 55px;
+  z-index: 2;
+  color: white;
+}
+
+.details-overlay span {
+  display: inline-block;
+  background: #ff4d2d;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.details-overlay h1 {
+  font-size: clamp(44px, 6vw, 76px);
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.details-overlay p {
+  font-size: 20px;
+  color: #e5e7eb;
+}
+
+.details-meta {
+  display: flex;
+  gap: 14px;
+  margin-top: 22px;
+  flex-wrap: wrap;
+}
+
+.details-meta b {
+  background: rgba(255,255,255,0.14);
+  backdrop-filter: blur(14px);
+  padding: 10px 16px;
+  border-radius: 999px;
+}
+
+.details-info {
+  padding: 70px 7%;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 50px;
+  align-items: start;
+}
+
+.details-info span {
+  color: #ff4d2d;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.details-info h2 {
+  font-size: 46px;
+  line-height: 1.1;
+  margin: 14px 0;
+}
+
+.details-info p {
+  color: #6b7280;
+  line-height: 1.8;
+  font-size: 17px;
+}
+
+.info-box {
+  background: white;
+  padding: 32px;
+  border-radius: 30px;
+  box-shadow: 0 22px 55px rgba(17, 24, 39, 0.08);
+}
+
+.info-box h3 {
+  margin-bottom: 8px;
+}
+
+.info-box p {
+  margin-bottom: 22px;
+}
+
+.restaurant-menu {
+  padding: 40px 7% 90px;
+}
+
+.details-error {
+  padding: 120px 7%;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+@media (max-width: 850px) {
+  .details-info {
+    grid-template-columns: 1fr;
+  }
+
+  .details-hero {
+    height: 430px;
+  }
+}

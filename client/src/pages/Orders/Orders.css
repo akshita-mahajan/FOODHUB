@@ -1,0 +1,140 @@
+.orders-page {
+  min-height: 100vh;
+  background: #fffaf3;
+}
+
+.orders-header {
+  padding: 85px 7% 45px;
+  text-align: center;
+}
+
+.orders-header span {
+  color: #ff4d2d;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.orders-header h1 {
+  font-size: clamp(42px, 5vw, 64px);
+  margin: 14px 0;
+}
+
+.orders-header p {
+  color: #6b7280;
+  font-size: 18px;
+}
+
+.orders-list {
+  padding: 20px 7% 90px;
+  display: grid;
+  gap: 28px;
+}
+
+.order-card {
+  background: white;
+  padding: 30px;
+  border-radius: 32px;
+  box-shadow: 0 22px 55px rgba(17, 24, 39, 0.08);
+}
+
+.order-top,
+.order-bottom {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.order-top h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+}
+
+.order-top p {
+  color: #6b7280;
+  margin-top: 6px;
+}
+
+.order-status {
+  background: #fff1eb;
+  color: #ff4d2d;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 900;
+}
+
+.order-items {
+  margin: 26px 0;
+  display: grid;
+  gap: 12px;
+}
+
+.order-item {
+  padding: 15px;
+  border-radius: 18px;
+  background: #fffaf3;
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  font-weight: 800;
+}
+
+.order-address {
+  padding: 20px;
+  border-radius: 22px;
+  background: #fff1eb;
+  margin-bottom: 22px;
+}
+
+.order-address h4 {
+  margin-bottom: 8px;
+}
+
+.order-address p {
+  color: #4b5563;
+  line-height: 1.7;
+  font-weight: 700;
+}
+
+.order-bottom h3 {
+  font-size: 24px;
+}
+
+.order-bottom button,
+.orders-empty button {
+  border: none;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: #ff4d2d;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.orders-empty {
+  min-height: calc(100vh - 84px);
+  background: #fffaf3;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 80px 7%;
+}
+
+.orders-empty svg {
+  font-size: 90px;
+  color: #ff4d2d;
+  margin-bottom: 20px;
+}
+
+.orders-empty h1 {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.orders-empty p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}

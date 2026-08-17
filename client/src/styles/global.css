@@ -1,0 +1,44 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, sans-serif;
+}
+
+body {
+  background: #fffaf3;
+  color: #111827;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.section-title {
+  text-align: center;
+  margin-bottom: 55px;
+}
+
+.section-title span {
+  color: #ff4d2d;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.section-title h2 {
+  font-size: 46px;
+  margin-top: 12px;
+}
+
+.section-title p {
+  max-width: 650px;
+  margin: 16px auto 0;
+  color: #6b7280;
+  line-height: 1.7;
+}

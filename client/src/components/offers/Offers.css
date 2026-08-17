@@ -1,0 +1,22 @@
+.offers-section {
+  padding: 65px 7%;
+  background: #fffaf3;
+}
+
+.offers-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
+}
+
+.offers-grid img {
+  width: 100%;
+  border-radius: 34px;
+  box-shadow: 0 24px 55px rgba(17, 24, 39, 0.12);
+}
+
+@media (max-width: 800px) {
+  .offers-grid {
+    grid-template-columns: 1fr;
+  }
+}

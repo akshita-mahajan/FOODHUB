@@ -1,0 +1,14 @@
+/* Minimal styles for the App component to satisfy import */
+.app {
+  text-align: center;
+}
+
+.logo {
+  height: 3rem;
+}
+
+.vite {
+  height: 2rem;
+}
+
+/* Add additional app styles here */

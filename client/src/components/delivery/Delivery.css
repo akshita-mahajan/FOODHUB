@@ -1,0 +1,79 @@
+.delivery-section {
+  padding: 65px 7%;
+  background: white;
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.delivery-image {
+  background: #ecfdf3;
+  border-radius: 44px;
+  padding: 35px;
+  text-align: center;
+}
+
+.delivery-image img {
+  max-width: 430px;
+  filter: drop-shadow(0 25px 35px rgba(17, 24, 39, 0.15));
+}
+
+.delivery-content span {
+  color: #16a34a;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.delivery-content h2 {
+  font-size: 48px;
+  margin: 14px 0;
+  line-height: 1.1;
+}
+
+.delivery-content p {
+  color: #6b7280;
+  line-height: 1.8;
+}
+
+.steps-img {
+  width: 100%;
+  margin: 28px 0;
+  border-radius: 22px;
+}
+
+.delivery-points {
+  display: grid;
+  gap: 16px;
+}
+
+.delivery-points div {
+  padding: 18px;
+  border-radius: 22px;
+  background: #fffaf3;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.delivery-points b {
+  background: #16a34a;
+  color: white;
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  display: grid;
+  place-items: center;
+}
+
+.delivery-points p {
+  margin: 0;
+  font-weight: 900;
+  color: #111827;
+}
+
+@media (max-width: 900px) {
+  .delivery-section {
+    grid-template-columns: 1fr;
+  }
+}

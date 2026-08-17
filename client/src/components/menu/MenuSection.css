@@ -1,0 +1,10 @@
+.menu-section {
+  padding: 65px 7%;
+  background: #fffaf3;
+}
+
+.food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+  gap: 34px;
+}

@@ -1,0 +1,144 @@
+.profile-page {
+  min-height: 100vh;
+  background: #fffaf3;
+}
+
+.profile-header {
+  padding: 85px 7% 45px;
+  text-align: center;
+}
+
+.profile-header span {
+  color: #ff4d2d;
+  font-weight: 900;
+  letter-spacing: 2px;
+}
+
+.profile-header h1 {
+  font-size: clamp(42px, 5vw, 64px);
+  margin: 14px 0;
+}
+
+.profile-header p {
+  color: #6b7280;
+  font-size: 18px;
+}
+
+.profile-layout {
+  padding: 20px 7% 90px;
+  display: grid;
+  grid-template-columns: 0.75fr 1.25fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.profile-card,
+.profile-stat,
+.profile-info {
+  background: white;
+  border-radius: 32px;
+  box-shadow: 0 22px 55px rgba(17, 24, 39, 0.08);
+}
+
+.profile-card {
+  padding: 34px;
+  text-align: center;
+}
+
+.profile-avatar {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #fff1eb;
+  color: #ff4d2d;
+  display: grid;
+  place-items: center;
+  font-size: 48px;
+  margin: 0 auto 20px;
+}
+
+.profile-card h2 {
+  font-size: 28px;
+  margin-bottom: 8px;
+}
+
+.profile-card p {
+  color: #6b7280;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.profile-card button {
+  border: none;
+  padding: 14px 24px;
+  border-radius: 999px;
+  background: #111827;
+  color: white;
+  font-weight: 900;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-dashboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+.profile-stat {
+  padding: 28px;
+  text-align: center;
+}
+
+.profile-stat svg {
+  font-size: 34px;
+  color: #ff4d2d;
+  margin-bottom: 12px;
+}
+
+.profile-stat h3 {
+  font-size: 34px;
+}
+
+.profile-stat p {
+  color: #6b7280;
+  font-weight: 800;
+}
+
+.profile-info {
+  grid-column: 1 / -1;
+  padding: 32px;
+}
+
+.profile-info h2 {
+  font-size: 28px;
+  margin-bottom: 24px;
+}
+
+.profile-info div {
+  padding: 18px;
+  border-radius: 18px;
+  background: #fffaf3;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-weight: 800;
+}
+
+.profile-info svg {
+  color: #ff4d2d;
+  font-size: 22px;
+}
+
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
