@@ -49,19 +49,58 @@ const getSingleOrder = async (req, res) => {
 
 const updateOrderStatus = async (req, res) => {
   try {
+    const { status } = req.body;
+
+    const allowedStatuses = [
+      "Placed",
+      "Accepted",
+      "Preparing",
+      "Out For Delivery",
+      "Delivered",
+      "Cancelled",
+    ];
+
+    if (!status) {
+      return res.status(400).json({
+        success: false,
+        message: "Order status is required",
+      });
+    }
+
+    if (!allowedStatuses.includes(status)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order status",
+        allowedStatuses,
+      });
+    }
+
     const order = await Order.findByIdAndUpdate(
       req.params.id,
       {
-        orderStatus: req.body.status,
+        orderStatus: status,
       },
       {
         new: true,
+        runValidators: true,
       }
     );
 
-    res.status(200).json(order);
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Order status updated successfully",
+      order,
+    });
   } catch (error) {
     res.status(500).json({
+      success: false,
       message: error.message,
     });
   }

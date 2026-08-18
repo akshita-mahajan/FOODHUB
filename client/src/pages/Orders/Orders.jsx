@@ -1,7 +1,13 @@
 import "./Orders.css";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiPackage, FiShoppingBag } from "react-icons/fi";
+import {
+  FiPackage,
+  FiShoppingBag,
+  FiCheck,
+  FiClock,
+  FiTruck,
+} from "react-icons/fi";
 
 function Orders() {
   const navigate = useNavigate();
@@ -9,6 +15,38 @@ function Orders() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+
+  const statusSteps = [
+    {
+      key: "Placed",
+      label: "Order Placed",
+      icon: <FiCheck />,
+    },
+    {
+      key: "Accepted",
+      label: "Accepted",
+      icon: <FiCheck />,
+    },
+    {
+      key: "Preparing",
+      label: "Preparing",
+      icon: <FiClock />,
+    },
+    {
+      key: "Out For Delivery",
+      label: "Out For Delivery",
+      icon: <FiTruck />,
+    },
+    {
+      key: "Delivered",
+      label: "Delivered",
+      icon: <FiCheck />,
+    },
+  ];
+
+  const getStatusIndex = (status) => {
+    return statusSteps.findIndex((step) => step.key === status);
+  };
 
   useEffect(() => {
     const fetchOrders = async () => {
@@ -114,118 +152,168 @@ function Orders() {
         <h1>Track your FoodHub orders</h1>
 
         <p>
-          View your recent orders, delivery status and
-          order summary.
+          View your recent orders, delivery status and order summary.
         </p>
       </section>
 
       <section className="orders-list">
-        {orders.map((order) => (
-          <div className="order-card" key={order._id}>
-            {/* =========================
-                ORDER HEADER
-            ========================== */}
+        {orders.map((order) => {
+          const currentStatusIndex = getStatusIndex(order.orderStatus);
 
-            <div className="order-top">
-              <div>
-                <h3>
-                  <FiPackage />
+          return (
+            <div className="order-card" key={order._id}>
 
-                  Order #
-                  {order._id?.slice(-6).toUpperCase()}
-                </h3>
+              {/* =========================
+                  ORDER HEADER
+              ========================== */}
+
+              <div className="order-top">
+                <div>
+                  <h3>
+                    <FiPackage />
+                    Order #{order._id?.slice(-6).toUpperCase()}
+                  </h3>
+
+                  <p>
+                    Placed on{" "}
+                    {new Date(order.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+
+                <span className="order-status">
+                  {order.orderStatus}
+                </span>
+              </div>
+
+              {/* =========================
+                  ORDER TRACKING
+              ========================== */}
+
+              {order.orderStatus !== "Cancelled" && (
+                <div className="order-tracking">
+                  <h4>Order Tracking</h4>
+
+                  <div className="tracking-steps">
+                    {statusSteps.map((step, index) => {
+                      const completed =
+                        index <= currentStatusIndex;
+
+                      const active =
+                        index === currentStatusIndex;
+
+                      return (
+                        <div
+                          className={`tracking-step ${
+                            completed ? "completed" : ""
+                          } ${active ? "active" : ""}`}
+                          key={step.key}
+                        >
+                          <div className="tracking-icon">
+                            {step.icon}
+                          </div>
+
+                          <span>{step.label}</span>
+
+                          {index < statusSteps.length - 1 && (
+                            <div className="tracking-line">
+                              <span
+                                className={
+                                  index < currentStatusIndex
+                                    ? "filled"
+                                    : ""
+                                }
+                              />
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
+
+              {/* =========================
+                  ITEMS
+              ========================== */}
+
+              <div className="order-items">
+                {order.items?.map((item, index) => (
+                  <div
+                    className="order-item"
+                    key={`${item.foodId}-${index}`}
+                  >
+                    <span>
+                      {item.name} × {item.quantity}
+                    </span>
+
+                    <b>
+                      ₹{item.price * item.quantity}
+                    </b>
+                  </div>
+                ))}
+              </div>
+
+              {/* =========================
+                  ADDRESS
+              ========================== */}
+
+              <div className="order-address">
+                <h4>Delivery Address</h4>
 
                 <p>
-                  Placed on{" "}
-                  {new Date(
-                    order.createdAt
-                  ).toLocaleDateString()}
+                  {order.deliveryAddress?.fullName},{" "}
+                  {order.deliveryAddress?.phone}
+                  <br />
+
+                  {order.deliveryAddress?.street},{" "}
+                  {order.deliveryAddress?.city},{" "}
+                  {order.deliveryAddress?.pincode}
                 </p>
               </div>
 
-              <span className="order-status">
-                {order.orderStatus}
-              </span>
+              {/* =========================
+                  PAYMENT
+              ========================== */}
+
+              <div className="order-payment">
+  <div className="payment-info">
+    <span>Payment Method</span>
+    <strong>{order.paymentMethod}</strong>
+  </div>
+
+  <div className="payment-info">
+    <span>Payment Status</span>
+    <strong>{order.paymentStatus}</strong>
+  </div>
+</div>
+
+              {/* =========================
+                  BOTTOM
+              ========================== */}
+
+              <div className="order-bottom">
+  <h3>
+    Total: ₹{order.totalAmount}
+  </h3>
+
+  <div className="order-actions">
+    <button
+      className="view-order-btn"
+      onClick={() => navigate(`/orders/${order._id}`)}
+    >
+      View Details
+    </button>
+
+    <button
+      onClick={() => navigate("/restaurants")}
+    >
+      Reorder
+    </button>
+  </div>
+</div>
             </div>
-
-            {/* =========================
-                ITEMS
-            ========================== */}
-
-            <div className="order-items">
-              {order.items?.map((item, index) => (
-                <div
-                  className="order-item"
-                  key={`${item.foodId}-${index}`}
-                >
-                  <span>
-                    {item.name} × {item.quantity}
-                  </span>
-
-                  <b>
-                    ₹{item.price * item.quantity}
-                  </b>
-                </div>
-              ))}
-            </div>
-
-            {/* =========================
-                ADDRESS
-            ========================== */}
-
-            <div className="order-address">
-              <h4>Delivery Address</h4>
-
-              <p>
-                {order.deliveryAddress?.fullName},{" "}
-                {order.deliveryAddress?.phone}
-                <br />
-
-                {order.deliveryAddress?.street},{" "}
-                {order.deliveryAddress?.city},{" "}
-                {order.deliveryAddress?.pincode}
-              </p>
-            </div>
-
-            {/* =========================
-                PAYMENT
-            ========================== */}
-
-            <div className="order-payment">
-              <span>
-                Payment:{" "}
-                <strong>
-                  {order.paymentMethod}
-                </strong>
-              </span>
-
-              <span>
-                Status:{" "}
-                <strong>
-                  {order.paymentStatus}
-                </strong>
-              </span>
-            </div>
-
-            {/* =========================
-                BOTTOM
-            ========================== */}
-
-            <div className="order-bottom">
-              <h3>
-                Total: ₹{order.totalAmount}
-              </h3>
-
-              <button
-                onClick={() =>
-                  navigate("/restaurants")
-                }
-              >
-                Reorder
-              </button>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </section>
     </main>
   );
