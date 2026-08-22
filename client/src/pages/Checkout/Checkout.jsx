@@ -45,23 +45,19 @@ function Checkout() {
     setError("");
 
     try {
-      /*
-       * Get the currently logged-in user.
-       * Your AuthContext should already store this.
-       */
-      const storedUser = localStorage.getItem("foodhub_user");
+      const token = localStorage.getItem("foodhub_token");
 
-      if (!storedUser) {
-        setError("Please login before placing your order.");
+      if (!token) {
+        setError(
+          "Your session has expired. Please login again."
+        );
         setLoading(false);
         return;
       }
 
-      const user = JSON.parse(storedUser);
-
       /*
        * Convert cart items into the structure
-       * expected by our MongoDB Order model.
+       * expected by the backend Order model.
        */
       const orderItems = cartItems.map((item) => ({
         foodId: item.id,
@@ -71,9 +67,15 @@ function Checkout() {
         quantity: item.quantity,
       }));
 
+      /*
+       * We DO NOT send the user ID here anymore.
+       *
+       * The backend gets the logged-in user from:
+       * req.user.id
+       *
+       * after verifying the JWT.
+       */
       const orderData = {
-        user: user.id || user._id,
-
         items: orderItems,
 
         deliveryAddress: {
@@ -103,12 +105,27 @@ function Checkout() {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(orderData),
         }
       );
 
       const data = await response.json();
+
+      /*
+       * JWT is invalid or expired.
+       */
+      if (response.status === 401) {
+        localStorage.removeItem("foodhub_token");
+        localStorage.removeItem("foodhub_user");
+
+        setError(
+          "Your session has expired. Please login again."
+        );
+        setLoading(false);
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(
@@ -125,36 +142,12 @@ function Checkout() {
       clearCart();
 
       /*
-       * Save the newly created order temporarily
-       * for the existing Orders page.
+       * The backend is now the source of truth
+       * for orders.
        *
-       * We'll replace this with GET /api/orders
-       * in the next step.
+       * We no longer need to save orders
+       * manually in localStorage.
        */
-      const previousOrders =
-        JSON.parse(
-          localStorage.getItem("foodhub_orders")
-        ) || [];
-
-      const newOrder = {
-        ...data.order,
-        id: data.order._id,
-        address: data.order.deliveryAddress,
-        gst: data.order.tax,
-        total: data.order.totalAmount,
-        status: data.order.orderStatus,
-        date: new Date(
-          data.order.createdAt
-        ).toLocaleDateString(),
-      };
-
-      localStorage.setItem(
-        "foodhub_orders",
-        JSON.stringify([
-          newOrder,
-          ...previousOrders,
-        ])
-      );
 
       navigate("/orders");
     } catch (err) {
@@ -254,9 +247,13 @@ function Checkout() {
                 type="radio"
                 name="payment"
                 value="COD"
-                checked={paymentMethod === "COD"}
+                checked={
+                  paymentMethod === "COD"
+                }
                 onChange={(e) =>
-                  setPaymentMethod(e.target.value)
+                  setPaymentMethod(
+                    e.target.value
+                  )
                 }
               />
 
@@ -268,9 +265,13 @@ function Checkout() {
                 type="radio"
                 name="payment"
                 value="UPI"
-                checked={paymentMethod === "UPI"}
+                checked={
+                  paymentMethod === "UPI"
+                }
                 onChange={(e) =>
-                  setPaymentMethod(e.target.value)
+                  setPaymentMethod(
+                    e.target.value
+                  )
                 }
               />
 
@@ -321,7 +322,9 @@ function Checkout() {
               </span>
 
               <b>
-                ₹{item.price * item.quantity}
+                ₹
+                {item.price *
+                  item.quantity}
               </b>
             </div>
           ))}

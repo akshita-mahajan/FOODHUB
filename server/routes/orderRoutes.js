@@ -7,14 +7,16 @@ const {
   updateOrderStatus,
 } = require("../controllers/orderController");
 
+const authMiddleware = require("../middleware/authMiddleware");
+
 const router = express.Router();
 
-router.post("/", placeOrder);
+router.post("/", authMiddleware, placeOrder);
 
-router.get("/user/:userId", getUserOrders);
+router.get("/my-orders", authMiddleware, getUserOrders);
 
-router.get("/:id", getSingleOrder);
+router.get("/:id", authMiddleware, getSingleOrder);
 
-router.put("/:id", updateOrderStatus);
+router.put("/:id", authMiddleware, updateOrderStatus);
 
 module.exports = router;
