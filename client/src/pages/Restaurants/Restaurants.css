@@ -288,3 +288,19 @@
   transform: translateY(-2px);
   box-shadow: 0 10px 25px rgba(255, 77, 45, 0.22);
 }
+/* =========================
+   RESTAURANT HEART
+========================= */
+
+.heart-btn {
+  transition: 0.25s ease;
+}
+
+.heart-btn:hover {
+  transform: scale(1.08);
+}
+
+.heart-btn.heart-active {
+  color: #ff4d2d;
+  background: #fff1eb;
+}

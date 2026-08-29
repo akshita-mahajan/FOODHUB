@@ -15,6 +15,20 @@ function Restaurants() {
   const [activeFilter, setActiveFilter] =
     useState("All");
 
+  /* =========================
+     RESTAURANT WISHLIST
+  ========================== */
+
+  const [wishlist, setWishlist] = useState(() => {
+    return (
+      JSON.parse(
+        localStorage.getItem(
+          "foodhub_restaurant_wishlist"
+        )
+      ) || []
+    );
+  });
+
   const filters = [
     "All",
     "Indian",
@@ -23,6 +37,10 @@ function Restaurants() {
     "Free Delivery",
     "Top Rated",
   ];
+
+  /* =========================
+     FILTER RESTAURANTS
+  ========================== */
 
   const filteredRestaurants = useMemo(() => {
     const searchValue = search
@@ -56,8 +74,52 @@ function Restaurants() {
     });
   }, [search, activeFilter]);
 
+  /* =========================
+     CLEAR SEARCH
+  ========================== */
+
   const clearSearch = () => {
     setSearch("");
+  };
+
+  /* =========================
+     TOGGLE RESTAURANT WISHLIST
+  ========================== */
+
+  const toggleWishlist = (restaurant) => {
+    const alreadySaved = wishlist.some(
+      (item) => item.id === restaurant.id
+    );
+
+    let updatedWishlist;
+
+    if (alreadySaved) {
+      updatedWishlist = wishlist.filter(
+        (item) => item.id !== restaurant.id
+      );
+    } else {
+      updatedWishlist = [
+        ...wishlist,
+        restaurant,
+      ];
+    }
+
+    setWishlist(updatedWishlist);
+
+    localStorage.setItem(
+      "foodhub_restaurant_wishlist",
+      JSON.stringify(updatedWishlist)
+    );
+  };
+
+  /* =========================
+     CHECK WISHLIST
+  ========================== */
+
+  const isWishlisted = (id) => {
+    return wishlist.some(
+      (item) => item.id === id
+    );
   };
 
   return (
@@ -164,73 +226,94 @@ function Restaurants() {
 
           <div className="restaurants-grid">
 
-            {filteredRestaurants.map((item) => (
+            {filteredRestaurants.map((item) => {
 
-              <article
-                className="restaurant-card"
-                key={item.id}
-                onClick={() =>
-                  navigate(
-                    `/restaurants/${item.id}`
-                  )
-                }
-              >
+              const saved =
+                isWishlisted(item.id);
 
-                <div className="restaurant-img">
+              return (
+                <article
+                  className="restaurant-card"
+                  key={item.id}
+                  onClick={() =>
+                    navigate(
+                      `/restaurants/${item.id}`
+                    )
+                  }
+                >
 
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                  />
+                  <div className="restaurant-img">
 
-                  <button
-                    type="button"
-                    className="heart-btn"
-                    onClick={(e) =>
-                      e.stopPropagation()
-                    }
-                    aria-label={`Add ${item.name} to favorites`}
-                  >
-                    <FiHeart />
-                  </button>
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                    />
 
-                  <span className="offer-badge">
-                    {item.offer}
-                  </span>
+                    {/* HEART */}
 
-                </div>
+                    <button
+                      type="button"
+                      className={`heart-btn ${
+                        saved
+                          ? "heart-active"
+                          : ""
+                      }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleWishlist(item);
+                      }}
+                      aria-label={
+                        saved
+                          ? `Remove ${item.name} from favorites`
+                          : `Add ${item.name} to favorites`
+                      }
+                    >
+                      <FiHeart
+                        fill={
+                          saved
+                            ? "currentColor"
+                            : "none"
+                        }
+                      />
+                    </button>
 
-                <div className="restaurant-content">
-
-                  <h3>
-                    {item.name}
-                  </h3>
-
-                  <p>
-                    {item.cuisine}
-                  </p>
-
-                  <div className="restaurant-meta">
-
-                    <span>
-                      ⭐ {item.rating}
-                    </span>
-
-                    <span>
-                      ⏱ {item.time}
-                    </span>
-
-                    <span>
-                      {item.delivery}
+                    <span className="offer-badge">
+                      {item.offer}
                     </span>
 
                   </div>
 
-                </div>
+                  <div className="restaurant-content">
 
-              </article>
+                    <h3>
+                      {item.name}
+                    </h3>
 
-            ))}
+                    <p>
+                      {item.cuisine}
+                    </p>
+
+                    <div className="restaurant-meta">
+
+                      <span>
+                        ⭐ {item.rating}
+                      </span>
+
+                      <span>
+                        ⏱ {item.time}
+                      </span>
+
+                      <span>
+                        {item.delivery}
+                      </span>
+
+                    </div>
+
+                  </div>
+
+                </article>
+              );
+            })}
 
           </div>
 
@@ -254,7 +337,10 @@ function Restaurants() {
               We couldn't find any restaurants
               matching
               {search && (
-                <strong> "{search}"</strong>
+                <strong>
+                  {" "}
+                  "{search}"
+                </strong>
               )}
               .
             </p>

@@ -11,9 +11,12 @@ import {
   FiEdit2,
   FiSave,
   FiX,
+  FiChevronRight,
+  FiTrash2,
 } from "react-icons/fi";
 import { useAuth } from "../../context/AuthContext";
 import { updateProfile } from "../../services/authService";
+import { restaurants } from "../../data/restaurantData";
 
 function Profile() {
   const navigate = useNavigate();
@@ -40,16 +43,34 @@ function Profile() {
     ) || [];
 
   /* =========================
-     WISHLIST
+     RESTAURANT WISHLIST
   ========================== */
 
-  const wishlist =
-    JSON.parse(
-      localStorage.getItem("foodhub_wishlist")
-    ) || [];
+  const [restaurantWishlist, setRestaurantWishlist] =
+    useState(() => {
+      return (
+        JSON.parse(
+          localStorage.getItem(
+            "foodhub_restaurant_wishlist"
+          )
+        ) || []
+      );
+    });
 
   /* =========================
-     HANDLE INPUT
+     FOOD WISHLIST
+  ========================== */
+
+  const [foodWishlist] = useState(() => {
+    return (
+      JSON.parse(
+        localStorage.getItem("foodhub_wishlist")
+      ) || []
+    );
+  });
+
+  /* =========================
+     INPUT CHANGE
   ========================== */
 
   const handleChange = (e) => {
@@ -111,11 +132,9 @@ function Profile() {
       }
 
       setIsEditing(false);
-      setMessage("Profile updated successfully.");
-
-      setTimeout(() => {
-        setMessage("");
-      }, 5000);
+      setMessage(
+        "Profile updated successfully."
+      );
     } catch (err) {
       console.error(
         "Profile update error:",
@@ -140,6 +159,31 @@ function Profile() {
     navigate("/");
   };
 
+  /* =========================
+     REMOVE RESTAURANT
+  ========================== */
+
+  const removeRestaurant = (id) => {
+    const updated = restaurantWishlist.filter(
+      (item) => item.id !== id
+    );
+
+    setRestaurantWishlist(updated);
+
+    localStorage.setItem(
+      "foodhub_restaurant_wishlist",
+      JSON.stringify(updated)
+    );
+  };
+
+  /* =========================
+     OPEN RESTAURANT
+  ========================== */
+
+  const openRestaurant = (id) => {
+    navigate(`/restaurants/${id}`);
+  };
+
   return (
     <main className="profile-page">
 
@@ -156,7 +200,8 @@ function Profile() {
         </h1>
 
         <p>
-          Manage your account, orders, addresses and preferences.
+          Manage your account, orders, addresses
+          and preferences.
         </p>
 
       </section>
@@ -178,22 +223,26 @@ function Profile() {
           </div>
 
           {!isEditing ? (
-
             <>
               <h2>
                 {user?.name || "FoodHub User"}
               </h2>
 
               <p>
-                {user?.email || "user@foodhub.com"}
+                {user?.email ||
+                  "user@foodhub.com"}
               </p>
 
-              <button onClick={handleEdit}>
+              <button
+                type="button"
+                onClick={handleEdit}
+              >
                 <FiEdit2 />
                 Edit Profile
               </button>
 
               <button
+                type="button"
                 className="profile-logout"
                 onClick={handleLogout}
               >
@@ -201,9 +250,7 @@ function Profile() {
                 Logout
               </button>
             </>
-
           ) : (
-
             <form
               className="profile-edit-form"
               onSubmit={handleUpdateProfile}
@@ -256,12 +303,9 @@ function Profile() {
               </div>
 
             </form>
-
           )}
 
-          {/* =========================
-              SUCCESS MESSAGE
-          ========================== */}
+          {/* SUCCESS */}
 
           {message && (
             <p className="profile-success">
@@ -269,9 +313,7 @@ function Profile() {
             </p>
           )}
 
-          {/* =========================
-              ERROR MESSAGE
-          ========================== */}
+          {/* ERROR */}
 
           {error && (
             <p className="profile-error">
@@ -287,11 +329,13 @@ function Profile() {
 
         <div className="profile-dashboard">
 
-          {/* TOTAL ORDERS */}
+          {/* ORDERS */}
 
           <div
             className="profile-stat"
-            onClick={() => navigate("/orders")}
+            onClick={() =>
+              navigate("/orders")
+            }
             role="button"
             tabIndex={0}
           >
@@ -301,47 +345,51 @@ function Profile() {
               {orders.length}
             </h3>
 
-            <p>
-              Total Orders
-            </p>
-
+            <p>Total Orders</p>
           </div>
 
-          {/* WISHLIST */}
+          {/* FOOD WISHLIST */}
 
           <div
             className="profile-stat"
-            onClick={() => navigate("/wishlist")}
+            onClick={() =>
+              navigate("/wishlist")
+            }
             role="button"
             tabIndex={0}
           >
-
             <FiHeart />
 
             <h3>
-              {wishlist.length}
+              {foodWishlist.length}
             </h3>
 
-            <p>
-              Wishlist Items
-            </p>
-
+            <p>Wishlist Items</p>
           </div>
 
-          {/* SAVED ADDRESS */}
+          {/* RESTAURANT FAVORITES */}
 
-          <div className="profile-stat">
-
-            <FiMapPin />
+          <div
+            className="profile-stat"
+            onClick={() =>
+              document
+                .getElementById(
+                  "saved-restaurants"
+                )
+                ?.scrollIntoView({
+                  behavior: "smooth",
+                })
+            }
+            role="button"
+            tabIndex={0}
+          >
+            <FiHeart />
 
             <h3>
-              1
+              {restaurantWishlist.length}
             </h3>
 
-            <p>
-              Saved Address
-            </p>
-
+            <p>Saved Restaurants</p>
           </div>
 
           {/* =========================
@@ -358,7 +406,8 @@ function Profile() {
               <FiUser />
 
               <span>
-                {user?.name || "FoodHub User"}
+                {user?.name ||
+                  "FoodHub User"}
               </span>
             </div>
 
@@ -366,7 +415,8 @@ function Profile() {
               <FiMail />
 
               <span>
-                {user?.email || "user@foodhub.com"}
+                {user?.email ||
+                  "user@foodhub.com"}
               </span>
             </div>
 
@@ -381,6 +431,184 @@ function Profile() {
           </div>
 
         </div>
+
+      </section>
+
+      {/* =========================
+          SAVED RESTAURANTS
+      ========================== */}
+
+      <section
+        className="saved-restaurants"
+        id="saved-restaurants"
+      >
+
+        <div className="saved-restaurants-header">
+
+          <div>
+            <span>
+              YOUR FAVORITES
+            </span>
+
+            <h2>
+              Saved Restaurants
+            </h2>
+
+            <p>
+              Restaurants you've saved for
+              your next order.
+            </p>
+          </div>
+
+          {restaurantWishlist.length > 0 && (
+            <button
+              type="button"
+              onClick={() =>
+                navigate("/restaurants")
+              }
+            >
+              Explore Restaurants
+              <FiChevronRight />
+            </button>
+          )}
+
+        </div>
+
+        {restaurantWishlist.length > 0 ? (
+
+          <div className="saved-restaurants-grid">
+
+            {restaurantWishlist.map(
+              (item) => {
+
+                const restaurant =
+                  restaurants.find(
+                    (restaurantItem) =>
+                      restaurantItem.id ===
+                      item.id
+                  );
+
+                if (!restaurant) {
+                  return null;
+                }
+
+                return (
+                  <article
+                    className="saved-restaurant-card"
+                    key={restaurant.id}
+                  >
+
+                    <div
+                      className="saved-restaurant-image"
+                      onClick={() =>
+                        openRestaurant(
+                          restaurant.id
+                        )
+                      }
+                    >
+
+                      <img
+                        src={restaurant.image}
+                        alt={restaurant.name}
+                      />
+
+                      <button
+                        type="button"
+                        className="saved-remove-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+
+                          removeRestaurant(
+                            restaurant.id
+                          );
+                        }}
+                        aria-label={`Remove ${restaurant.name}`}
+                      >
+                        <FiTrash2 />
+                      </button>
+
+                    </div>
+
+                    <div className="saved-restaurant-content">
+
+                      <h3>
+                        {restaurant.name}
+                      </h3>
+
+                      <p>
+                        {restaurant.cuisine}
+                      </p>
+
+                      <div className="saved-restaurant-meta">
+
+                        <span>
+                          ⭐ {restaurant.rating}
+                        </span>
+
+                        <span>
+                          ⏱ {restaurant.time}
+                        </span>
+
+                        <span>
+                          {restaurant.delivery}
+                        </span>
+
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() =>
+                          openRestaurant(
+                            restaurant.id
+                          )
+                        }
+                      >
+                        View Restaurant
+                        <FiChevronRight />
+                      </button>
+
+                    </div>
+
+                  </article>
+                );
+              }
+            )}
+
+          </div>
+
+        ) : (
+
+          /* =========================
+             EMPTY STATE
+          ========================== */
+
+          <div className="saved-restaurants-empty">
+
+            <div>
+              <FiHeart />
+            </div>
+
+            <h3>
+              No saved restaurants yet
+            </h3>
+
+            <p>
+              Tap the heart on any restaurant
+              to save it here.
+            </p>
+
+            <button
+              type="button"
+              onClick={() =>
+                navigate("/restaurants")
+              }
+            >
+              Explore Restaurants
+            </button>
+
+          </div>
+
+        )}
 
       </section>
 
