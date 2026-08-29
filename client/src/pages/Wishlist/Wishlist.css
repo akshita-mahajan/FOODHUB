@@ -67,3 +67,50 @@
   font-weight: 900;
   cursor: pointer;
 }
+/* =========================================
+   FOOD CARD WISHLIST
+========================================= */
+
+.food-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.wishlist-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 34px;
+  height: 34px;
+
+  padding: 0;
+
+  border: 1px solid #e5e7eb;
+  border-radius: 50%;
+
+  background: #ffffff;
+  color: #6b7280;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+.wishlist-btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+.wishlist-btn:hover {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
+
+.wishlist-btn.active {
+  color: #dc2626;
+  border-color: #fecaca;
+  background: #fef2f2;
+}
